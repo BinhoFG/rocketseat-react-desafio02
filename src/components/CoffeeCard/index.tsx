@@ -16,6 +16,8 @@ import cubano from '../../assets/coffee/cubano.png'
 import havaiano from '../../assets/coffee/havaiano.png'
 import arabe from '../../assets/coffee/arabe.png'
 import irlandes from '../../assets/coffee/irlandes.png'
+import { useContext, useState } from 'react'
+import { CartContext } from '../../contexts/CartContext'
 
 const coffeeList: any = {
   expressoTradicional,
@@ -47,6 +49,24 @@ export function CoffeeCard({
   name,
   description,
 }: CoffeeCardProps) {
+  const { addNewItemToCart } = useContext(CartContext)
+
+  const [itemQtd, setItemQtd] = useState(1)
+
+  function handleRemoveQtd() {
+    if (itemQtd > 1) {
+      setItemQtd((state) => state - 1)
+    }
+  }
+
+  function handleAddQtd() {
+    setItemQtd((state) => state + 1)
+  }
+
+  function handleAddCoffee() {
+    addNewItemToCart({ image, tags, name, description, qtd: itemQtd })
+  }
+
   return (
     <CoffeeCardContainer className="card">
       <img src={coffeeList[image]} alt="" />
@@ -64,11 +84,11 @@ export function CoffeeCard({
         </div>
         <div className="actions">
           <div className="counter">
-            <button>—</button>
-            <span>1</span>
-            <button>+</button>
+            <button onClick={handleRemoveQtd}>—</button>
+            <span>{itemQtd}</span>
+            <button onClick={handleAddQtd}>+</button>
           </div>
-          <span className="cart">
+          <span onClick={handleAddCoffee} className="cart">
             <ShoppingCart size={22} weight="fill" />
           </span>
         </div>

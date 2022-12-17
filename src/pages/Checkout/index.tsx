@@ -7,12 +7,41 @@ import {
   Money,
 } from 'phosphor-react'
 
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/yup'
+import * as zod from 'zod'
+
 import { CheckoutContainer } from './styles'
 
 import { NavLink } from 'react-router-dom'
 import { CheckoutCoffeeCard } from '../../components/CheckoutCoffeeCard'
+import { useContext } from 'react'
+import { CartContext } from '../../contexts/CartContext'
+
+const newOrderValidationSchema = zod.object({
+  cep: zod.string().min(1, 'Ao menos 1 caractere'),
+  rua: zod.string().min(1),
+  numero: zod.string().min(1),
+  complemento: zod.string().optional(),
+  bairro: zod.string(),
+  cidade: zod.string(),
+  uf: zod.string(),
+})
 
 export function Checkout() {
+  const { cart } = useContext(CartContext)
+
+  const { register } = useForm({
+    resolver: zodResolver(newOrderValidationSchema),
+  })
+
+  const totalCartQtd = cart.reduce((total, obj) => {
+    return (total += Number(obj.qtd))
+  }, 0)
+  const totalItemsPrice =
+    (cart.length * (9.9 * totalCartQtd)).toFixed(2) || '0,00'
+  const totalPrice = Number(totalItemsPrice) + 3.5 || '3,50'
+
   return (
     <CheckoutContainer>
       <div className="form-with-title">
@@ -32,7 +61,11 @@ export function Checkout() {
           </div>
 
           <div className="form-data">
-            <input className="input-cep" placeholder="CEP" />
+            <input
+              {...register('cep')}
+              className="input-cep"
+              placeholder="CEP"
+            />
             <input placeholder="RUA" />
             <div className="form-info-1">
               <input className="input-number" placeholder="Número" />
@@ -88,15 +121,23 @@ export function Checkout() {
         <span>Cafés selecionados</span>
         <div className="selected-coffes-card">
           <div className="coffees-container">
-            <CheckoutCoffeeCard />
-            <CheckoutCoffeeCard />
+            {cart.map((item) => {
+              return (
+                <CheckoutCoffeeCard
+                  key={item.name}
+                  name={item.name}
+                  image={item.image}
+                  qtd={item.qtd}
+                />
+              )
+            })}
           </div>
 
           <div className="confirm">
             <div className="confirm-details">
               <div className="total-items">
                 <span>Total de itens</span>
-                <span>R$ 29,70</span>
+                <span>R$ {totalItemsPrice}</span>
               </div>
               <div className="delivery">
                 <span>Entrega</span>
@@ -104,7 +145,7 @@ export function Checkout() {
               </div>
               <div className="total">
                 <span>Total</span>
-                <span>R$ 33,20</span>
+                <span>R$ {totalPrice}</span>
               </div>
             </div>
             <button>Confirmar Pedido</button>

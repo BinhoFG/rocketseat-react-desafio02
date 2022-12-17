@@ -35,7 +35,7 @@ export const HeaderContainer = styled.header`
       position: relative;
 
       &::after {
-        content: '2';
+        content: '0';
         position: absolute;
         width: 1.38rem;
         height: 1.38rem;
