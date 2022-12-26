@@ -16,6 +16,7 @@ import cubano from '../../assets/coffee/cubano.png'
 import havaiano from '../../assets/coffee/havaiano.png'
 import arabe from '../../assets/coffee/arabe.png'
 import irlandes from '../../assets/coffee/irlandes.png'
+import { priceFormatter } from '../../utils/formatter'
 import { useContext, useState } from 'react'
 import { CartContext } from '../../contexts/CartContext'
 
@@ -37,33 +38,49 @@ const coffeeList: any = {
 }
 
 interface CheckoutCoffeeCardProps {
+  id: string
   image: string
   name: string
   qtd: number
 }
 
 export function CheckoutCoffeeCard({
+  id,
   image,
   name,
   qtd,
 }: CheckoutCoffeeCardProps) {
-  const { removeItemFromCart } = useContext(CartContext)
-
+  const { updateItemQtd, removeItemFromCart } = useContext(CartContext)
   const [itemQtd, setItemQtd] = useState(qtd)
-  qtd = itemQtd
 
-  function handleRemoveQtd() {
+  const formattedPrice = priceFormatter.format(9.9 * itemQtd)
+
+  function handleDecreaseQtd() {
     if (itemQtd > 1) {
       setItemQtd((state) => state - 1)
+
+      const data = {
+        itemId: id,
+        type: 'decrease',
+      }
+
+      updateItemQtd(data)
     }
   }
 
-  function handleAddQtd() {
+  function handleIncreaseQtd() {
     setItemQtd((state) => state + 1)
+
+    const data = {
+      itemId: id,
+      type: 'increase',
+    }
+
+    updateItemQtd(data)
   }
 
-  function handleRemoveItem() {
-    removeItemFromCart(name)
+  function handleRemoveItemFromCart() {
+    removeItemFromCart(id)
   }
 
   return (
@@ -73,17 +90,17 @@ export function CheckoutCoffeeCard({
         <span className="coffee-name">{name}</span>
         <div className="actions">
           <div className="counter">
-            <button onClick={handleRemoveQtd}>—</button>
-            <span>{qtd}</span>
-            <button onClick={handleAddQtd}>+</button>
+            <button onClick={handleDecreaseQtd}>—</button>
+            <span>{itemQtd}</span>
+            <button onClick={handleIncreaseQtd}>+</button>
           </div>
-          <span onClick={handleRemoveItem} className="remove">
+          <span onClick={handleRemoveItemFromCart} className="remove">
             <Trash size={16} />
             REMOVER
           </span>
         </div>
       </div>
-      <span className="price">R$ 9,90</span>
+      <span className="price">{formattedPrice}</span>
     </CheckoutCoffeeCardContainer>
   )
 }

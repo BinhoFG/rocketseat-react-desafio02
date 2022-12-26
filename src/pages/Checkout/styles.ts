@@ -1,9 +1,16 @@
 import styled from 'styled-components'
 
+import * as RadioGroup from '@radix-ui/react-radio-group'
+
 export const CheckoutContainer = styled.main`
   display: flex;
   justify-content: space-between;
   margin: 0 7.5rem;
+
+  .input-error {
+    font-size: 0.75rem;
+    color: red;
+  }
 
   .form-with-title {
     display: flex;
@@ -157,34 +164,11 @@ export const CheckoutContainer = styled.main`
           font-size: 0.875rem;
         }
       }
+    }
 
-      .payment-method {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        span {
-          display: flex;
-          align-items: center;
-          padding: 1rem 0;
-          background-color: ${(props) => props.theme['base-button']};
-          color: ${(props) => props.theme['base-text']};
-          font-size: 0.75rem;
-          border-radius: 6px;
-          width: 11.17rem;
-          border: 1px solid transparent;
-          cursor: pointer;
-
-          &:hover {
-            background-color: ${(props) => props.theme['base-hover']};
-          }
-
-          svg {
-            margin-right: 0.75rem;
-            margin-left: 1rem;
-            color: ${(props) => props.theme.purple};
-          }
-        }
+    .back-button-container {
+      a {
+        text-decoration: none;
       }
     }
 
@@ -205,13 +189,6 @@ export const CheckoutContainer = styled.main`
 
       &:hover {
         background: ${(props) => props.theme['yellow-dark']};
-      }
-
-      .nav-link {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: ${(props) => props.theme.white};
       }
 
       svg {
@@ -240,6 +217,10 @@ export const CheckoutContainer = styled.main`
       .coffees-container {
         width: 23rem;
         padding: 2.5rem 2.5rem 0 2.5rem;
+
+        .noItemsAddedToCart {
+          font-weight: bold;
+        }
 
         div:not(.coffees-container) + div {
           padding-top: 1.5rem;
@@ -288,5 +269,39 @@ export const CheckoutContainer = styled.main`
         }
       }
     }
+  }
+`
+
+export const PaymentMethod = styled(RadioGroup.Root)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+export const PaymentInput = styled(RadioGroup.Item)`
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  background-color: ${(props) => props.theme['base-button']};
+  color: ${(props) => props.theme['base-text']};
+  font-size: 0.75rem;
+  border-radius: 6px;
+  width: 11.17rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  &[data-state='unchecked']:hover {
+    background-color: ${(props) => props.theme['base-hover']};
+  }
+
+  &[data-state='checked'] {
+    border: 1px solid ${(props) => props.theme.purple};
+    background-color: ${(props) => props.theme['purple-light']};
+  }
+
+  svg {
+    margin-right: 0.75rem;
+    margin-left: 1rem;
+    color: ${(props) => props.theme.purple};
   }
 `

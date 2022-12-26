@@ -34,22 +34,23 @@ export const HeaderContainer = styled.header`
       height: 2.38rem;
       position: relative;
 
-      &::after {
-        content: '0';
+      .cartItemsCounter {
         position: absolute;
-        width: 1.38rem;
-        height: 1.38rem;
-        background-color: ${(props) => props.theme['yellow-dark']};
+
+        background: ${(props) => props.theme['yellow-dark']};
         color: ${(props) => props.theme.white};
-        border-radius: 50%;
-        text-align: center;
-        font-size: 0.75rem;
-        font-weight: bold;
+
         display: flex;
+        border-radius: 50%;
         align-items: center;
         justify-content: center;
-        left: 1.68rem;
-        bottom: 1.68rem;
+
+        width: 20px;
+        height: 20px;
+        top: -7px;
+        right: -7px;
+
+        font-size: 0.875rem;
       }
 
       svg {

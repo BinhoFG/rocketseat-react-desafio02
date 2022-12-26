@@ -1,15 +1,41 @@
 import { createContext, ReactNode, useReducer } from 'react'
-import { cartReducer, Item } from '../reducers/cart/reducer'
 import {
-  addNewItemToCartAction,
+  addItemToCartAction,
+  confirmOrderAction,
   removeItemFromCartAction,
-  ChangeItemQtdAction,
-} from '../reducers/cart/actions'
+  updateItemQtdAction,
+} from '../reducers/cart/action'
+import { CartReducer, Item } from '../reducers/cart/reducer'
+
+export interface UpdateItemQtd {
+  itemId: string
+  type: string
+}
+
+export interface AddItemToCartType {
+  image: string
+  name: string
+  qtd: number
+}
+
+export interface DeliveryInfoType {
+  complement?: string | undefined
+  number: string
+  cep: string
+  street: string
+  district: string
+  city: string
+  state: string
+  paymentMethod: 'credit' | 'debit' | 'cash'
+}
 
 interface CartContextType {
-  cart: Item[]
-  addNewItemToCart: (item: Item) => void
-  removeItemFromCart: (itemName: string) => void
+  items: Item[]
+  deliveryInfo: DeliveryInfoType
+  addItemToCart: (newItem: AddItemToCartType) => void
+  updateItemQtd: (data: UpdateItemQtd) => void
+  removeItemFromCart: (itemId: string) => void
+  confirmOrder: (data: DeliveryInfoType) => void
 }
 
 export const CartContext = createContext({} as CartContextType)
@@ -19,21 +45,39 @@ interface CartContextProviderProps {
 }
 
 export function CartContextProvider({ children }: CartContextProviderProps) {
-  const [cartState, dispatch] = useReducer(cartReducer, { cart: [] })
+  const [cartState, dispatch] = useReducer(CartReducer, {
+    items: [],
+    deliveryInfo: {} as DeliveryInfoType,
+  })
 
-  const { cart } = cartState
-
-  function addNewItemToCart(item: Item) {
-    return dispatch(addNewItemToCartAction(item))
+  function addItemToCart(newItem: AddItemToCartType) {
+    dispatch(addItemToCartAction(newItem))
   }
 
-  function removeItemFromCart(itemName: string) {
-    return dispatch(removeItemFromCartAction(itemName))
+  function updateItemQtd(data: UpdateItemQtd) {
+    dispatch(updateItemQtdAction(data))
   }
+
+  function removeItemFromCart(itemId: string) {
+    dispatch(removeItemFromCartAction(itemId))
+  }
+
+  function confirmOrder(data: DeliveryInfoType) {
+    dispatch(confirmOrderAction(data))
+  }
+
+  const { items, deliveryInfo } = cartState
 
   return (
     <CartContext.Provider
-      value={{ cart, addNewItemToCart, removeItemFromCart }}
+      value={{
+        items,
+        deliveryInfo,
+        addItemToCart,
+        updateItemQtd,
+        removeItemFromCart,
+        confirmOrder,
+      }}
     >
       {children}
     </CartContext.Provider>

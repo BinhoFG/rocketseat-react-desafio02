@@ -49,22 +49,27 @@ export function CoffeeCard({
   name,
   description,
 }: CoffeeCardProps) {
-  const { addNewItemToCart } = useContext(CartContext)
-
+  const { addItemToCart } = useContext(CartContext)
   const [itemQtd, setItemQtd] = useState(1)
 
-  function handleRemoveQtd() {
+  function handleDecreaseQtd() {
     if (itemQtd > 1) {
       setItemQtd((state) => state - 1)
     }
   }
 
-  function handleAddQtd() {
+  function handleIncreaseQtd() {
     setItemQtd((state) => state + 1)
   }
 
-  function handleAddCoffee() {
-    addNewItemToCart({ image, tags, name, description, qtd: itemQtd })
+  function handleAddItemToCart() {
+    const newItemObj = {
+      image,
+      name,
+      qtd: itemQtd,
+    }
+
+    addItemToCart(newItemObj)
   }
 
   return (
@@ -84,11 +89,11 @@ export function CoffeeCard({
         </div>
         <div className="actions">
           <div className="counter">
-            <button onClick={handleRemoveQtd}>—</button>
+            <button onClick={handleDecreaseQtd}>—</button>
             <span>{itemQtd}</span>
-            <button onClick={handleAddQtd}>+</button>
+            <button onClick={handleIncreaseQtd}>+</button>
           </div>
-          <span onClick={handleAddCoffee} className="cart">
+          <span onClick={handleAddItemToCart} className="cart">
             <ShoppingCart size={22} weight="fill" />
           </span>
         </div>

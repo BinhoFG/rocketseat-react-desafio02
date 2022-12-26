@@ -2,8 +2,19 @@ import { SuccessContainer } from './styles'
 
 import SuccessBike from '../../assets/successBike.png'
 import { CurrencyDollar, MapPin, Timer } from 'phosphor-react'
+import { useContext } from 'react'
+import { CartContext } from '../../contexts/CartContext'
 
 export function Success() {
+  const { deliveryInfo } = useContext(CartContext)
+
+  const formattedPaymentMethod =
+    deliveryInfo.paymentMethod === 'credit'
+      ? 'Cartão de crédito'
+      : deliveryInfo.paymentMethod === 'debit'
+      ? 'Cartão de débito'
+      : 'Dinheiro'
+
   return (
     <SuccessContainer>
       <div className="confirmed">
@@ -19,9 +30,9 @@ export function Success() {
             <div className="content">
               <span>
                 Entrega em{' '}
-                <span className="strong">Rua João Daniel Martinelli, 102</span>
+                <span className="strong">{`${deliveryInfo.street}, ${deliveryInfo.number}`}</span>
               </span>
-              <span>Farrapos - Porto Alegre, RS</span>
+              <span>{`${deliveryInfo.district} - ${deliveryInfo.city}, ${deliveryInfo.state}`}</span>
             </div>
           </div>
 
@@ -43,7 +54,7 @@ export function Success() {
 
             <div className="content">
               <span>Pagamento na entrega</span>
-              <span className="strong">Cartão de Crédito</span>
+              <span className="strong">{formattedPaymentMethod}</span>
             </div>
           </div>
         </div>
