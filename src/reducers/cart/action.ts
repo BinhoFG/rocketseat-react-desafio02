@@ -40,7 +40,7 @@ export function confirmOrderAction(data: DeliveryInfoType) {
   return {
     type: ActionTypes.CONFIRM_ORDER,
     payload: {
-      data,
+      deliveryInfo: data,
     },
   }
 }

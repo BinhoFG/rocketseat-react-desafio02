@@ -20,5 +20,3 @@ export function App() {
     </ThemeProvider>
   )
 }
-
-// Construir Home
